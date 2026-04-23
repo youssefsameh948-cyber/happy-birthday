@@ -98,7 +98,7 @@
     <div class="glass-card">
         <div id="start-screen">
             <button id="runawayBtn" onclick="handleInteraction()">🎁 اضغطي هنا يا قمر 🎁</button>
-            <div id="joke-msg">متخافيش مش هعض، دوسي بس! 😉</div>
+            <div id="joke-msg"> دوسي بس! 😉</div>
         </div>
         <div id="cake-screen" style="display: none;">
             <div id="blow-instruction">اطفي الشمعة يا قمر 🕯️✨</div>
@@ -121,8 +121,8 @@
         let attempts = 0;
         const jokes = [
             "تؤتؤ.. حاولي تاني! 😂",
-            "لسه شوية.. معلش استحملي الرخامة 😜",
-            "خلاص بجد.. دي الدوسة اللي بجد! 🙄"
+            " معلش استحملي الرخامة 😜",
+            "خلاص بجد.. دي اخر مره ! 🙄"
         ];
 
         function handleInteraction() {
@@ -138,7 +138,7 @@
                 const x = (Math.random() - 0.5) * maxX * 1.5;
                 const y = (Math.random() - 0.5) * maxY * 1.5;
 
-                btn.style.transform = translate(${x}px, ${y}px);
+                btn.style.transform = `translate(${x}px, ${y}px)`;
                 msgBox.innerText = jokes[attempts];
                 attempts++;
             } else {
