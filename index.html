@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise 🎂</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff4e7a;
+            --secondary: #23a6d5;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Cairo', sans-serif;
+            overflow: hidden;
+            /* خلفية متدرجة متحركة بنعومة */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* حاوية البطاقة الزجاجية */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            padding: 60px 20px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* الزر الهارب */
+        #runawayBtn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 20;
+            white-space: nowrap;
+        }
+
+        #joke-msg {
+            margin-top: 30px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-height: 1.5em;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* محتوى المفاجأة */
+        #main-content {
+            display: none;
+            animation: scaleIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .candle-container {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .flame {
+            width: 15px;
+            height: 25px;
+            background: #ffcc00;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px #ffcc00;
+            animation: flicker 0.1s ease-in infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1) rotate(3deg); }
+        }
+
+        .off .flame { display: none; }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.8rem;
+            color: white;
+            margin: 15px 0;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .final-msg {
+            color: white;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* قلوب في الخلفية */
+        .heart {
+            position: absolute;
+            color: rgba(255,255,255,0.4);
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 6s linear forwards;
+        }
+        @keyframes floatUp {
+            to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="رابط_الأغنية_هنا.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="glass-card">
+        <div id="start-screen">
+            <button id="runawayBtn" onclick="handleInteraction()">🎁 اضغطي هنا يا قمر 🎁</button>
+            <div id="joke-msg">متخافيش مش هعض، دوسي بس! 😉</div>
+        </div>
+
+        <div id="main-content">
+            <div class="candle-container" id="candle" onclick="blowCandle()">
+                <div class="flame"></div>
+                <div style="font-size: 80px;">🎂</div>
+            </div>
+            <h1>Happy Birthday!</h1>
+            <div class="final-msg">
+                خلاص خلاص متبقيش قفوشة.. <br>
+                كل سنة وأنتِ طيبة يا أجمل حاجة في الدنيا! 💖✨
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        let attempts = 0;
+        const btn = document.getElementById('runawayBtn');
+        const msgBox = document.getElementById('joke-msg');
+        
+        const jokes = [
+            "تؤتؤ.. حاولي تاني! 😂",
+            "لسه شوية.. معلش استحملي الرخامة 😜",
+            "خلاص آخر مرة بجد.. دوسي أهو! 🙄",
+            "بهزر معاكي.. كفاية كدا! ❤️"
+        ];
+
+        function handleInteraction() {
+            if (attempts < 3) {
+                moveButton();
+                msgBox.innerText = jokes[attempts];
+                attempts++;
+            } else {
+                startCelebration();
+            }
+        }
+
+        function moveButton() {
+            // حساب حدود الحركة داخل الكارد أو الشاشة
+            const x = (Math.random() - 0.5) * 200; // تحرك لليمين أو اليسار بـ 100px
+            const y = (Math.random() - 0.5) * 200; // تحرك للأعلى أو الأسفل بـ 100px
+            
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        function startCelebration() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            
+            // تشغيل الموسيقى
+            const music = document.getElementById('bgMusic');
+            music.play().catch(() => console.log("المتصفح منع التشغيل التلقائي"));
+
+            // احتفال أولي
+            launchConfetti();
+            startHearts();
+        }
+
+        function blowCandle() {
+            document.getElementById('candle').classList.add('off');
+            confetti({
+                particleCount: 250,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#ff4e7a', '#ffffff', '#23a6d5']
+            });
+        }
+
+        function launchConfetti() {
+            var end = Date.now() + (4 * 1000);
+            (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        function startHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '100vh';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 6000);
+            }, 400);
+        }
+    </script>
+</body>
+</html>
